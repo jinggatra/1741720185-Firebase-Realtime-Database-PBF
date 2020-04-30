@@ -3,6 +3,7 @@ import './BlogPost.css';
 import Post from "../../component/BlogPost/Post";
 // import API from "../../services";
 import firebaseConfig from '../../firebase/config';
+import firebase from 'firebase'
 
 class BlogPost extends Component {
     constructor(props){
@@ -53,8 +54,8 @@ class BlogPost extends Component {
         });
     }
 
-    handleTombolSimpan = () => {            // fungsi untuk meng-handle tombol simpan
-        let title =this.refs.judulArtikel.value;
+    handleTombolSimpan = (event) => {            // fungsi untuk meng-handle tombol simpan
+        let title = this.refs.judulArtikel.value;
         let body = this.refs.isiArtikel.value;
         let uid = this.refs.uid.value;
         if (uid && title && body) {
@@ -84,7 +85,7 @@ class BlogPost extends Component {
                     <div className="form-group row">
                         <label htmlFor="title" className="col-sm-2 col-form-label">Judul</label>
                         <div className="col-sm-10">
-                            <input type="text" className="form-control" id="title" name="title" onChange={this.handleTambahArtikel} />
+                            <input type="text" className="form-control" id="title" name="title" ref="judulArtikel" />
                         </div>
                     </div>
                     <div className="form-group row">
@@ -93,12 +94,19 @@ class BlogPost extends Component {
                             <textarea className="form-control" id="body" name="body" rows="3" ref="isiArtikel"></textarea>
                         </div>
                     </div>
+                    <input type="hidden" name="uid" ref="uid"/>
                     <button type="submit" className="btn btn-primary" onClick={this.handleTombolSimpan}>Simpan</button>
                 </div>
                 <h2>Daftar Artikel</h2>
                 {
                     this.state.listArtikel.map(artikel => {  // looping dan masukkan untuk setiap data yang ada di listArtikel ke variabel artikel
-                        return <Post key={artikel.id} judul={artikel.title} isi={artikel.body} idArtikel={artikel.id} hapusArtikel={this.handleHapusArtikel} />     // mappingkan data json dari API sesuai dengan kategorinya
+                        return <Post 
+                                    key={artikel.uid} 
+                                    judul={artikel.title} 
+                                    isi={artikel.body} 
+                                    idArtikel={artikel.uid} 
+                                    hapusArtikel={this.handleHapusArtikel} 
+                                />     // mappingkan data json dari API sesuai dengan kategorinya
                     })
                 }
             </div>
